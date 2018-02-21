@@ -1,0 +1,127 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret lat
+  longitude: !secret long
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 14
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Amsterdam
+  whitelist_external_dirs:
+    - '/config/testfiles'
+
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  api_password: !secret http_password
+  # Uncomment this if you are using SSL or running in Docker etc
+  # base_url: example.duckdns.org:8123
+
+duckdns:
+  domain: !secret duckdns_domain
+  access_token: !secret duckdns_token
+
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+
+# Hass.io
+hassio:
+
+# Discover some devices automatically
+#discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time.
+history:
+
+# View all events in a logbook
+logbook:
+
+
+tado:
+  username: !secret tado_username
+  password: !secret tado_password
+
+camera:
+  - platform: generic
+    name: Indoor Camera
+    still_image_url: http://192.168.178.164:88/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=ha&pwd=ha2384
+  - platform: generic
+    name: Outdoor Camera
+    still_image_url: http://192.168.178.55:88/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=ha&pwd=ha2384
+
+binary_sensor:
+  - platform: rest
+    name: Indoor Camera Motion Sensor
+    resource: http://192.168.178.164:88/cgi-bin/CGIProxy.fcgi?cmd=getDevState&usr=ha&pwd=ha2384
+    device_class: motion
+    scan_interval: 10
+    value_template: >-
+      {%- if "<motionDetectAlarm>2</motionDetectAlarm>" in value -%}
+        {{ true }}
+      {%- else -%}
+        {{ false }}
+      {%- endif -%}
+  - platform: rest
+    name: Outdoor Camera Motion Sensor
+    resource: http://192.168.178.55:88/cgi-bin/CGIProxy.fcgi?cmd=getDevState&usr=ha&pwd=ha2384
+    device_class: motion
+    scan_interval: 10
+    value_template: >-
+      {%- if "<motionDetectAlarm>2</motionDetectAlarm>" in value -%}
+        {{ true }}
+      {%- else -%}
+        {{ false }}
+      {%- endif -%}
+
+notify:
+  - name: slack
+    platform: slack
+    api_key: !secret slack_apikey
+    default_channel: '#general'
+
+# Climate
+climate:
+  platform: tado
+
+# Track the sun
+sun:
+
+# Weather
+weather:
+  - platform: buienradar
+    name: buienradar
+    forecast: True
+
+ifttt:
+  key: !secret ifttt_key
+
+# Text to speech
+tts:
+  platform: google
+
+# Z-Wave
+zwave:
+  usb_path: /dev/ttyACM0
+
+group: !include groups.yaml
+automation: !include automations.yaml

@@ -1,0 +1,59 @@
+ default_view:
+    view: yes
+    icon: mdi:home
+    entities:
+      - group.livingroom
+      - group.bathroom
+      - group.outdoor
+
+#VIEWS
+  livingroom_view:
+    view: yes
+    name: Living Room
+    entities:
+      - group.livingroom
+
+  bathroom_view:
+    view: yes
+    name: Bathroom
+    entities:
+      - group.bathroom
+
+  outdoor_view:
+    view: yes
+    name: Outdoor
+    entities:
+      - group.outdoor
+
+  weather_view:
+    view: yes
+    name: Weather
+    entities:
+      - group.weather
+
+#GROUPS
+  livingroom:
+    name: Living Room
+    entities:
+      - sensor.living_room_tado_mode
+      - sensor.living_room_heating
+
+  bathroom:
+    name: Bathroom
+    entities:
+      - sensor.bathroom_tado_mode
+      - sensor.bathroom_temperature
+      - sensor.bathroom_heating
+
+  outdoor:
+    name: Outdoor
+    entities:
+      - binary_sensor.indoor_camera_motion_sensor
+      - binary_sensor.outdoor_camera_motion_sensor
+      - camera.indoor_camera
+      - camera.outdoor_camera
+
+  weather:
+    name: Weather
+    entities:
+      - weather.buienradar

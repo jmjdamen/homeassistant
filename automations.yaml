@@ -1,0 +1,21 @@
+- alias: Motion detect, slack message, when away
+  condition:
+  - condition: state
+    entity_id: sensor.living_room_tado_mode
+    state: AWAY
+  trigger:
+  - entity_id: binary_sensor.outdoor_camera_motion_sensor
+    from: 'off'
+    platform: state
+    to: 'on'
+  action:
+    - service: camera.snapshot
+      data:
+        entity_id: camera.outdoor_camera
+        filename: '/config/testfiles/outdoor_camera_snapshot.jpg'
+    - service: notify.slack
+      data:
+        message: Motion detected by Outdoor Camera when not home!
+        data:
+          file:
+            path: '/config/testfiles/outdoor_camera_snapshot.jpg'
