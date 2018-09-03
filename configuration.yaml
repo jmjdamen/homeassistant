@@ -56,6 +56,17 @@ history:
 # View all events in a logbook
 logbook:
 
+light:
+  - platform: group                                                                                    
+    name: Living Room Lights                                                                               
+    entities:                                                                                          
+      - light.fibaro_system_fgd212_dimmer_2_level_10
+      - light.fibaro_system_fgd212_dimmer_2_level_8  
+
+  - platform: group
+    name: Kitchen Lights
+    entities:
+      - light.fibaro_system_fgd212_dimmer_2_level_6
 
 tado:
   username: !secret tado_username
@@ -65,25 +76,25 @@ camera:
   - platform: generic
     name: Indoor Camera
     still_image_url: http://192.168.178.164:88/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=ha&pwd=ha2384
-  - platform: generic
-    name: Outdoor Camera
-    still_image_url: http://192.168.178.55:88/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=ha&pwd=ha2384
+  - platform: generic  
+    name: Outdoor Camera                                                                                                                                     
+    still_image_url: http://192.168.178.53:88/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=ha&pwd=ha2384 
 
 binary_sensor:
-  - platform: rest
-    name: Indoor Camera Motion Sensor
-    resource: http://192.168.178.164:88/cgi-bin/CGIProxy.fcgi?cmd=getDevState&usr=ha&pwd=ha2384
-    device_class: motion
-    scan_interval: 10
-    value_template: >-
-      {%- if "<motionDetectAlarm>2</motionDetectAlarm>" in value -%}
-        {{ true }}
-      {%- else -%}
-        {{ false }}
-      {%- endif -%}
+  - platform: rest                                                                                     
+    name: Indoor Camera Motion Sensor                                                                 
+    resource: http://192.168.178.164:88/cgi-bin/CGIProxy.fcgi?cmd=getDevState&usr=ha&pwd=ha2384         
+    device_class: motion                                                                               
+    scan_interval: 10                                                                                  
+    value_template: >-                                                                                 
+      {%- if "<motionDetectAlarm>2</motionDetectAlarm>" in value -%}                                   
+        {{ true }}                                                                                     
+      {%- else -%}                                                                                     
+        {{ false }}                                                                                    
+      {%- endif -%} 
   - platform: rest
     name: Outdoor Camera Motion Sensor
-    resource: http://192.168.178.55:88/cgi-bin/CGIProxy.fcgi?cmd=getDevState&usr=ha&pwd=ha2384
+    resource: http://192.168.178.53:88/cgi-bin/CGIProxy.fcgi?cmd=getDevState&usr=ha&pwd=ha2384
     device_class: motion
     scan_interval: 10
     value_template: >-

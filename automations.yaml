@@ -1,21 +1,87 @@
 - alias: Motion detect, slack message, when away
-  condition:
-  - condition: state
+  condition:        
+  - condition: state                       
     entity_id: sensor.living_room_tado_mode
-    state: AWAY
-  trigger:
+    state: AWAY 
+  trigger:                                              
   - entity_id: binary_sensor.outdoor_camera_motion_sensor
-    from: 'off'
+    from: 'off'    
     platform: state
     to: 'on'
   action:
-    - service: camera.snapshot
-      data:
-        entity_id: camera.outdoor_camera
+    - service: camera.snapshot         
+      data:                                                                               
+        entity_id: camera.outdoor_camera                                                   
         filename: '/config/testfiles/outdoor_camera_snapshot.jpg'
     - service: notify.slack
-      data:
+      data:                                                     
         message: Motion detected by Outdoor Camera when not home!
-        data:
+        data:       
           file:
             path: '/config/testfiles/outdoor_camera_snapshot.jpg'
+
+- alias: Roller Shutter Bedroom, time schedule up weekdays
+  trigger:
+    platform: time
+    at: '06:20:00'
+  condition:                                                                    
+  - condition: time                                
+    weekday:                                       
+      - mon                                                                     
+      - tue                                                                     
+      - wed                                                                     
+      - thu                                                                     
+      - fri  
+  action:
+    - service: cover.set_cover_position
+      data:
+        entity_id: cover.fibaro_system_fgrm222_roller_shutter_controller_2_level
+        position: 100
+
+- alias: Roller Shutter Bedroom, time schedule up weekend                     
+  trigger:                                                                      
+    platform: time                                                              
+    at: '08:30:00'                                                              
+  condition:                                                                    
+  - condition: time                                                             
+    weekday:                                                                    
+      - sat                                                                    
+      - sun                                                                     
+  action:                                                                       
+    - service: cover.set_cover_position                                         
+      data:                                                                     
+        entity_id: cover.fibaro_system_fgrm222_roller_shutter_controller_2_level
+        position: 100 
+
+- alias: Roller Shutter Bedroom, time schedule down weekdays
+  trigger:
+    platform: time
+    at: '09:00:00'
+  condition:                                                                    
+  - condition: time                                
+    weekday:                                       
+      - mon                                                                     
+      - tue                                                                     
+      - wed                                                                     
+      - thu                                                                     
+      - fri  
+  action:
+    - service: cover.set_cover_position
+      data:
+        entity_id: cover.fibaro_system_fgrm222_roller_shutter_controller_2_level
+        position: 0
+
+- alias: Turn on the light when the sun sets
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-00:30:00"
+  condition:
+    condition: state
+    entity_id: sensor.living_room_tado_mode
+    state: HOME
+  action:
+    service: light.turn_on
+    entity_id: light.living_room_lights
+    data:
+      brightness: 90
